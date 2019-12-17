@@ -13133,6 +13133,7 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">mean_squared_error</span>
 </pre></div>
 
     </div>
@@ -14159,13 +14160,28 @@ memory usage: 108.0 KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span> 
-    <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_true</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
-    <span class="n">_abs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_true</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">_abs</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="n">_abs</span>
+    <span class="c1">#y_true, y_pred = np.array(y_true), np.array(y_pred)</span>
+    <span class="n">_abs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">_abs</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="n">rms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">rms</span>
 </pre></div>
 
     </div>
@@ -14182,7 +14198,7 @@ memory usage: 108.0 KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">Lasso</span>
@@ -14206,7 +14222,7 @@ memory usage: 108.0 KB
 <span class="n">rf</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
 <span class="c1"># Instantiate the grid search model</span>
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_grid</span><span class="p">,</span> 
-                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">)</span>
 
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results_modified</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;total_score&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;2.5_Flag&#39;</span><span class="p">]),</span>
@@ -14221,10 +14237,19 @@ memory usage: 108.0 KB
 <span class="n">regressor</span> <span class="o">=</span> <span class="n">best_grid_rf</span>
 <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> 
 
-
 <span class="c1"># Prediction</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned lambda = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]))</span>
+
+
+<span class="c1"># Prediction</span>
+<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Test Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Train Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Error_Mape&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Score:&#39;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -14264,6 +14289,10 @@ memory usage: 108.0 KB
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Tuned lambda = 0.01
+Test Error:1.2009385176194503
+Train Error:1.2299983572258637
+Test Error_Mape26.234345387086723
+Score:-0.9692046588982762
 </pre>
 </div>
 </div>
@@ -14274,25 +14303,13 @@ memory usage: 108.0 KB
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=-1)]: Done  34 tasks      | elapsed:    5.7s
-[Parallel(n_jobs=-1)]: Done  50 out of  50 | elapsed:    5.7s finished
+<pre>[Parallel(n_jobs=-1)]: Done  35 tasks      | elapsed:    5.2s
+[Parallel(n_jobs=-1)]: Done  43 out of  50 | elapsed:    5.2s remaining:    0.8s
+[Parallel(n_jobs=-1)]: Done  50 out of  50 | elapsed:    5.2s finished
 </pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 
@@ -14306,7 +14323,7 @@ memory usage: 108.0 KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
@@ -14335,7 +14352,7 @@ memory usage: 108.0 KB
 <span class="n">rf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
 <span class="c1"># Instantiate the grid search model</span>
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_grid</span><span class="p">,</span> 
-                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results_modified</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;total_score&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;2.5_Flag&#39;</span><span class="p">]),</span>
@@ -14355,6 +14372,14 @@ memory usage: 108.0 KB
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned max_depth = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;max_depth&#39;</span><span class="p">]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned min_samples_leaf = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">]))</span>
+
+<span class="c1"># Prediction</span>
+<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Test Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Train Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Error_Mape&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Score:&#39;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -14395,6 +14420,10 @@ memory usage: 108.0 KB
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Tuned max_depth = 50
 Tuned min_samples_leaf = 1
+Test Error:0.08391813582966891
+Train Error:2.6446875683857747
+Test Error_Mape0.7042253521126761
+Score:0.9929577464788732
 </pre>
 </div>
 </div>
@@ -14416,7 +14445,7 @@ Tuned min_samples_leaf = 1
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeRegressor</span>
@@ -14445,7 +14474,7 @@ Tuned min_samples_leaf = 1
 <span class="n">rf</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">()</span>
 <span class="c1"># Instantiate the grid search model</span>
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_grid</span><span class="p">,</span> 
-                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">)</span>
 
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results_modified</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;total_score&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;2.5_Flag&#39;</span><span class="p">]),</span>
@@ -14465,6 +14494,16 @@ Tuned min_samples_leaf = 1
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned max_depth = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;max_depth&#39;</span><span class="p">]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned min_samples_leaf = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">]))</span>
+
+
+<span class="c1"># Prediction</span>
+<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Test Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Train Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Error_Mape&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Score:&#39;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -14495,6 +14534,10 @@ Tuned min_samples_leaf = 1
 <pre>Fitting 5 folds for each of 39 candidates, totalling 195 fits
 Tuned max_depth = 50
 Tuned min_samples_leaf = 30
+Test Error:1.4319248521159331
+Train Error:1.3084160952059296
+Test Error_Mape31.1177489035155
+Score:-1.1623419561251875
 </pre>
 </div>
 </div>
@@ -14505,9 +14548,7 @@ Tuned min_samples_leaf = 30
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=-1)]: Done 195 out of 195 | elapsed:    1.0s finished
-C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\model_selection\_search.py:813: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
-  DeprecationWarning)
+<pre>[Parallel(n_jobs=-1)]: Done 195 out of 195 | elapsed:    0.9s finished
 </pre>
 </div>
 </div>
@@ -14525,7 +14566,7 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
@@ -14549,7 +14590,7 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
 <span class="c1"># Instantiate the grid search model</span>
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_grid</span><span class="p">,</span> 
-                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">)</span>
 
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results_modified</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;total_score&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;2.5_Flag&#39;</span><span class="p">]),</span>
@@ -14568,6 +14609,16 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <span class="c1"># Prediction</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned max_features = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;max_features&#39;</span><span class="p">]))</span>
+
+
+<span class="c1"># Prediction</span>
+<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Test Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Train Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Error_Mape&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Score:&#39;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -14577,17 +14628,6 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <div class="output_wrapper">
 <div class="output">
 
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Fitting 5 folds for each of 14 candidates, totalling 70 fits
-</pre>
-</div>
-</div>
 
 <div class="output_area">
 
@@ -14606,7 +14646,12 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Tuned max_features = 11
+<pre>Fitting 5 folds for each of 14 candidates, totalling 70 fits
+Tuned max_features = 10
+Test Error:0.0
+Train Error:2.6225198897622617
+Test Error_Mape0.0
+Score:1.0
 </pre>
 </div>
 </div>
@@ -14617,7 +14662,7 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=-1)]: Done  70 out of  70 | elapsed:    1.1s finished
+<pre>[Parallel(n_jobs=-1)]: Done  70 out of  70 | elapsed:    1.0s finished
 </pre>
 </div>
 </div>
@@ -14628,7 +14673,7 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestRegressor</span>
@@ -14653,7 +14698,7 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
 <span class="c1"># Instantiate the grid search model</span>
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_grid</span><span class="p">,</span> 
-                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">)</span>
 
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results_modified</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;total_score&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;2.5_Flag&#39;</span><span class="p">]),</span>
@@ -14672,6 +14717,16 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <span class="c1"># Prediction</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned max_features = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;max_features&#39;</span><span class="p">]))</span>
+
+
+<span class="c1"># Prediction</span>
+<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Test Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Train Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Error_Mape&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Score:&#39;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -14700,7 +14755,11 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Fitting 5 folds for each of 14 candidates, totalling 70 fits
-Tuned max_features = 14
+Tuned max_features = 13
+Test Error:1.38261336544598
+Train Error:1.3341301672988308
+Test Error_Mape28.507930417839088
+Score:-1.0908450704225352
 </pre>
 </div>
 </div>
@@ -14712,8 +14771,6 @@ Tuned max_features = 14
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>[Parallel(n_jobs=-1)]: Done  70 out of  70 | elapsed:    0.8s finished
-C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\model_selection\_search.py:813: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
-  DeprecationWarning)
 </pre>
 </div>
 </div>
@@ -14731,7 +14788,7 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">GradientBoostingClassifier</span>
@@ -14757,7 +14814,7 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <span class="n">rf</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">()</span>
 <span class="c1"># Instantiate the grid search model</span>
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_grid</span><span class="p">,</span> 
-                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">)</span>
 
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results_modified</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;total_score&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;2.5_Flag&#39;</span><span class="p">]),</span>
@@ -14778,6 +14835,16 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned learning_rate = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned max_depth = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;max_depth&#39;</span><span class="p">]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned n_estimators = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">]))</span>
+
+
+<span class="c1"># Prediction</span>
+<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Test Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Train Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Error_Mape&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Score:&#39;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -14787,6 +14854,17 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <div class="output_wrapper">
 <div class="output">
 
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>[Parallel(n_jobs=-1)]: Using backend LokyBackend with 4 concurrent workers.
+</pre>
+</div>
+</div>
 
 <div class="output_area">
 
@@ -14805,12 +14883,11 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=-1)]: Using backend LokyBackend with 4 concurrent workers.
-[Parallel(n_jobs=-1)]: Done  33 tasks      | elapsed:    3.7s
-[Parallel(n_jobs=-1)]: Done 154 tasks      | elapsed:   19.3s
-[Parallel(n_jobs=-1)]: Done 357 tasks      | elapsed:   45.4s
+<pre>[Parallel(n_jobs=-1)]: Done  33 tasks      | elapsed:    3.7s
+[Parallel(n_jobs=-1)]: Done 154 tasks      | elapsed:   18.8s
+[Parallel(n_jobs=-1)]: Done 357 tasks      | elapsed:   43.7s
 [Parallel(n_jobs=-1)]: Done 640 tasks      | elapsed:  1.2min
-[Parallel(n_jobs=-1)]: Done 980 out of 980 | elapsed:  1.6min finished
+[Parallel(n_jobs=-1)]: Done 980 out of 980 | elapsed:  1.5min finished
 </pre>
 </div>
 </div>
@@ -14824,6 +14901,10 @@ C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\
 <pre>Tuned learning_rate = 0.001
 Tuned max_depth = 3
 Tuned n_estimators = 200
+Test Error:0.0
+Train Error:2.640044051087943
+Test Error_Mape0.0
+Score:1.0
 </pre>
 </div>
 </div>
@@ -14834,7 +14915,7 @@ Tuned n_estimators = 200
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">GradientBoostingRegressor</span>
@@ -14860,7 +14941,7 @@ Tuned n_estimators = 200
 <span class="n">rf</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">()</span>
 <span class="c1"># Instantiate the grid search model</span>
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">param_grid</span><span class="p">,</span> 
-                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+                          <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">)</span>
 
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results_modified</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;total_score&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;2.5_Flag&#39;</span><span class="p">]),</span>
@@ -14881,6 +14962,16 @@ Tuned n_estimators = 200
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned learning_rate = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned max_depth = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;max_depth&#39;</span><span class="p">]))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tuned n_estimators = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">]))</span>
+
+
+<span class="c1"># Prediction</span>
+<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Test Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Train Error:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test Error_Mape&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Score:&#39;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">grid_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
 </pre></div>
 
     </div>
@@ -14909,26 +15000,7 @@ Tuned n_estimators = 200
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>[Parallel(n_jobs=-1)]: Using backend LokyBackend with 4 concurrent workers.
-[Parallel(n_jobs=-1)]: Done  33 tasks      | elapsed:    5.9s
-[Parallel(n_jobs=-1)]: Done 154 tasks      | elapsed:  1.5min
-[Parallel(n_jobs=-1)]: Done 357 tasks      | elapsed:  3.5min
-[Parallel(n_jobs=-1)]: Done 640 tasks      | elapsed:  6.1min
-[Parallel(n_jobs=-1)]: Done 980 out of 980 | elapsed:  7.3min finished
-C:\Users\elif.erdem\AppData\Local\Continuum\anaconda3\lib\site-packages\sklearn\model_selection\_search.py:813: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
-  DeprecationWarning)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Tuned learning_rate = 0.05
-Tuned max_depth = 3
-Tuned n_estimators = 100
+[Parallel(n_jobs=-1)]: Done  33 tasks      | elapsed:    5.2s
 </pre>
 </div>
 </div>
@@ -14936,6 +15008,17 @@ Tuned n_estimators = 100
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Classifier methods are more reliable than the regresssors . 
+Test error and train error has same pattern also we can say that there is no underfitting and overfitting. 
+Crossvalidation error is related to test error
+All in all, according to features these errors can change  and it can be observed that underfitting or  overfitting problems.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
