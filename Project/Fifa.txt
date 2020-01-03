@@ -1,0 +1,21 @@
+﻿team_id,team,ATT,MID,DEF,OVR
+2615,AFC Bournemouth,79,77,76,77
+2617,Arsenal,87,81,79,81
+2632,Aston Villa,76,75,73,75
+2613,Brighton,73,77,75,76
+2629,Burnley,77,76,76,76
+2616,Chelsea,79,84,79,81
+2619,Crystal Palace,76,78,76,77
+2612,Everton,77,78,79,79
+2611,Leicester City,78,78,78,78
+2621,Liverpool,86,83,84,84
+2626,Manchester City,87,87,83,86
+2627,Manchester Utd,83,79,77,81
+2630,Newcastle Utd,78,77,76,77
+2641,Norwich,76,73,72,74
+2654,Sheffield Utd,73,73,74,74
+2614,Southampton,71,76,77,76
+,Spurs,89,82,82,83
+2623,Watford,78,78,76,77
+2620,West Ham,83,78,76,78
+2646,Wolves,78,83,77,78

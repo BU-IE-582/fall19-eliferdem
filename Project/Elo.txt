@@ -1,0 +1,25 @@
+﻿rank,team,team_id,elo
+1,liverpool,2621,2057
+2,manchester city,2626,1993
+3,chelsea,2616,1860
+4,leicester,2611,1835
+5,tottenham,2628,1835
+6,manchester united,2627,1819
+7,manchester utd,2627,1819
+8,arsenal,2617,1811
+9,wolves,2646,1753
+10,crystal palace,2619,1743
+11,newcastle,2630,1718
+12,newcastle utd,2630,1718
+13,everton,2612,1717
+14,everton,2616,1717
+15,west ham,2620,1687
+16,west ham (eng),2620,1687
+17,bournemouth,2615,1677
+18,burnley,2629,1674
+19,sheffield utd,2654,1670
+20,brighton,2613,1649
+21,southampton,2614,1642
+22,aston villa,2632,1633
+23,watford,2623,1627
+24,norwich,2641,1592
